@@ -8,28 +8,33 @@ fn main() {
     // thread_rng: function that gives us the particular random number generator that we're going to use.
     // gen_range: method that generates a random number between the two numbers we pass as arguments
     // (inclusive on the lower bound but exclusive on the upper bound)
-    let secret_number = rand::thread_rng().gen_range(1..= 101);
+    let secret_number = rand::thread_rng().gen_range(1..=101);
 
     println!("The secret number is: {}", secret_number);
 
-    println!("Please input your guess.");
+    loop {
+        println!("Please input your guess.");
 
-    let mut guess = String::new(); // mutable variable: guess is a new, empty instance of a String
+        let mut guess = String::new(); // mutable variable: guess is a new, empty instance of a String
 
-    io::stdin() // stdin function returns an instance of std::io::Stdin . stdin: standard input handle for the terminal (io::stdin())
-        .read_line(&mut guess) // read_line method on the standard input handle to get input from the user. & indicates that this argument is a reference
-        .expect("Failed to read line");
+        io::stdin() // stdin function returns an instance of std::io::Stdin . stdin: standard input handle for the terminal (io::stdin())
+            .read_line(&mut guess) // read_line method on the standard input handle to get input from the user. & indicates that this argument is a reference
+            .expect("Failed to read line");
 
-    // introducing guess as a new variable with a new type: u32 (unsigned 32-bit integer)
-    // trim: method on the string to eliminate whitespace* (spaces, tabs, etc.) and newlines
-    // parse: method on strings that parses a string into some kind of number
-    // expect: method that allows us to handle potential failure by providing an error message
-    let guess: u32 = guess.trim().parse().expect("Please type a number!"); // shadowing: reusing the guess variable name
-    println!("You guessed: {}", guess);
+        // introducing guess as a new variable with a new type: u32 (unsigned 32-bit integer)
+        // trim: method on the string to eliminate whitespace* (spaces, tabs, etc.) and newlines
+        // parse: method on strings that parses a string into some kind of number
+        // expect: method that allows us to handle potential failure by providing an error message
+        let guess: u32 = guess.trim().parse().expect("Please type a number!"); // shadowing: reusing the guess variable name
+        println!("You guessed: {}", guess);
 
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal => println!("You win!"),
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
     }
 }
