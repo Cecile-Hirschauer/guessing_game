@@ -12,6 +12,8 @@ fn main() {
 
     println!("The secret number is: {}", secret_number);
 
+   // loop: keyword that creates an infinite loop
+    // Allowing the player to guess multiple times until they guess the correct number
     loop {
         println!("Please input your guess.");
 
@@ -21,19 +23,23 @@ fn main() {
             .read_line(&mut guess) // read_line method on the standard input handle to get input from the user. & indicates that this argument is a reference
             .expect("Failed to read line");
 
-        // introducing guess as a new variable with a new type: u32 (unsigned 32-bit integer)
-        // trim: method on the string to eliminate whitespace* (spaces, tabs, etc.) and newlines
-        // parse: method on strings that parses a string into some kind of number
-        // expect: method that allows us to handle potential failure by providing an error message
-        let guess: u32 = guess.trim().parse().expect("Please type a number!"); // shadowing: reusing the guess variable name
+        // trim: method on the String instance to eliminate whitespace at the beginning and end of the string
+        // parse: method that parses a string into some kind of number. parse can parse a variety of number types,
+        // so we need to tell Rust the exact number type we want by using annotations
+        let guess: u32 = match guess.trim().parse() { // match: keyword that allows us to compare the result of parse to Ok and Err
+            Ok(num) => num, // Ok: variant that matches if the parse method returns a number
+            Err(_) => continue, // continue: keyword that tells the program to go to the next iteration of the loop
+        };
+
         println!("You guessed: {}", guess);
 
         match guess.cmp(&secret_number) {
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
+            // Ordering::Equal: variant that matches if the guess is equal to the secret number
             Ordering::Equal => {
                 println!("You win!");
-                break;
+                break; // break: keyword that exits the loop
             }
         }
     }
